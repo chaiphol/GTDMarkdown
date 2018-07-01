@@ -1,0 +1,82 @@
+<!--
+  Generated template for the SettingsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-buttons left>
+      <button ion-button clear icon-only item-end (click)="goBack()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+
+    <ion-title end>Settings</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-item>
+    <!-- <h3>Projects</h3> -->
+    <ion-label item-start>Bookmarks</ion-label>
+    <button ion-button clear icon-only item-end (click)="addProjectPath()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-item>
+  <ion-list>
+    <ion-item no-lines *ngFor="let path of paths" (click)="doPromptSync()">
+      <ion-label item-left>{{path.name}}</ion-label>
+      <button ion-button clear item-right (click)="removeProjectPath(path.name)">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-item>
+  </ion-list>
+  <ion-item>
+    <ion-label>Theme</ion-label>
+    <ion-select item-end [placeholder]="theme" (tap)="showPopOver($event, themes, onThemeChange)">
+      {{theme}}
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Text Focus</ion-label>
+    <ion-toggle [(ngModel)]="textFocus" (ionChange)="onTextFocusChange(textFocus)">
+    </ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label>Header Font</ion-label>
+    <ion-select item-end [placeholder]="headerFont" (tap)="showPopOver($event, headerFontOptions, onHeaderFontChange)">
+      {{headerFont}}
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Text Font</ion-label>
+    <ion-select item-end [placeholder]="textFont" (tap)="showPopOver($event, textFontOptions, onTextFontChange)">
+      {{textFont}}
+    </ion-select>
+  </ion-item>
+  <ion-item>
+    <ion-label>Font Size</ion-label>
+    <ion-select item-end [placeholder]="textSize" (tap)="showPopOver($event, fontSizeList, onFontSizeChange)">
+      {{textSize}}
+    </ion-select>
+  </ion-item>
+  <ion-item id="header-colors">
+    <ion-label>Header Color</ion-label>
+    <ion-buttons item-end end>
+      <button ion-button (tap)="onHeaderColorChange(color.value)" *ngFor="let color of colors" [style.background]="color.value">
+        <ion-icon *ngIf="color.value == headerColor" name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-item>
+  <!-- <ion-item id="text-colors">
+    <ion-label>Text Color</ion-label>
+    <ion-buttons item-end end>
+      <button ion-button (tap)="onTextColorChange(color.value)" *ngFor="let color of colors" [style.background]="color.value">
+        <ion-icon *ngIf="color.value == textColor" name="checkmark"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-item> -->
+</ion-content>

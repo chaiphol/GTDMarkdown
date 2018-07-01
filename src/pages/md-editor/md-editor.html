@@ -1,0 +1,91 @@
+<ion-header>
+    <ion-navbar>
+      <!--
+      <button ion-button [menuToggle]="activeMenu">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      -->
+      <ion-title>{{fileName}}</ion-title>
+    </ion-navbar>
+  </ion-header>
+<ion-content fullscreen (document:keyup)="onKeyUp($event)" (document:selectionchange)="onSelectionChange($event)" (window:resize)="onResize($event)">
+
+  <!-- <templates #templates></templates> -->
+
+  <div id="title-bar">
+    <ion-item no-lines [class.slide-in-top]="searchMode" [class.slide-out-top]="!searchMode">
+      <ion-input id="search-bar" #searchBar type="search" (keyup)="onSearchInput($event)"></ion-input>
+      <ion-buttons item-end>
+          <button ion-button clear icon (mousedown)="toggleSearch($event)">
+              <ion-icon name="close"></ion-icon>
+            </button>
+        <button ion-button clear icon (mousedown)="goTo($event,{forward: false})">
+          <ion-icon name="arrow-up"></ion-icon>
+        </button>
+        <button ion-button clear icon (mousedown)="goTo($event,{forward: true})">
+          <ion-icon name="arrow-down"></ion-icon>
+        </button>
+        <label class="counter">{{matchIndex+1}}/{{matches+1}}</label>
+      </ion-buttons>`
+    </ion-item>
+  </div>
+
+  <span *ngIf="!smallScreen" id="wide" [class]="previewMode">
+    <span #input id="first-screen" [class.notFocused]="textFocused" contenteditable="true" (input)="onEditInput()" data-text="Content">
+    </span>
+    <span #output id="second-screen" [style.fontSize]="textSize" [style.fontFamily]="textFont" [style.color]="textColor"></span>
+  </span>
+
+  <span *ngIf="smallScreen" id="small">
+    <ion-slides #slider>
+      <ion-slide>
+        <span #input id="first-screen" [class.notFocused]="textFocused" contenteditable="true" (input)="onEditInput()" data-text="Content">
+        </span>
+      </ion-slide>
+      <ion-slide>
+        <span id="second-screen" #output [style.fontSize]="textSize" [style.fontFamily]="textFont" ></span>
+      </ion-slide>
+    </ion-slides>
+  </span>
+  <!--
+  <ion-buttons class="top-left">
+    <button ion-button clear menuToggle (mousedown)="$event.preventDefault()">
+      <ion-icon color='black' name="menu"></ion-icon>
+    </button>
+  </ion-buttons>
+  <ion-buttons *ngIf='!smallScreen' class="top-right">
+    <button ion-button clear (mousedown)="exitApp()">
+      <ion-icon color='black' name="close"></ion-icon>
+    </button>
+  </ion-buttons>
+
+  <ion-buttons *ngIf='smallScreen' [class.searchMode]="searchMode" class="top-right">
+    <button ion-button clear (mousedown)="toggleSearch()">
+      <ion-icon color='black' name="search"></ion-icon>
+    </button>
+    <button ion-button clear (mousedown)="undo($event)">
+      <ion-icon color='black' name="undo"></ion-icon>
+    </button>
+    <button ion-button clear (mousedown)="redo($event)">
+      <ion-icon color='black' name="redo"></ion-icon>
+    </button>
+  </ion-buttons>
+
+
+  <ion-buttons *ngIf='!smallScreen' class="bottom-right">
+    <button ion-button clear (mousedown)="showPopover($event)">
+      <ion-icon color='black' name="eye"></ion-icon>
+    </button>
+  </ion-buttons>
+-->
+  <div id="status-bar">Word Count: {{wordCount}} </div>
+
+<!--
+  <ion-fab *ngIf="isTemplate" right bottom>
+    <button ion-fab (mousedown)="selectTemplate()">
+      <ion-icon name="copy"></ion-icon>
+    </button>
+  </ion-fab>
+-->
+
+</ion-content>

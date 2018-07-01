@@ -1,0 +1,36 @@
+$duration: 1s;
+$maxHeight: 600px;
+
+expandable {
+    .expandable-header{
+        cursor: pointer;
+    }
+    .expandable-header .label{
+        font-size: larger;
+    }
+    .wrapper > .item {
+    }
+    .expanded > .item {
+    }
+    .wrapper > span {
+    }
+    .expanded > span {
+    }
+
+    .wrapper {
+        max-height: 0;
+        overflow:hidden;
+        
+        transition: max-height $duration ease; 
+    }
+
+    .expanded {
+        max-height: $maxHeight;
+        overflow: hidden;
+        
+        transition: max-height $duration ease;
+        
+    }
+
+
+}
