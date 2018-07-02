@@ -231,6 +231,12 @@ export class MdEditorPage {
         this.shellObj.openExternal(path)
       })
     })
+
+    elOutput.querySelectorAll('img').forEach((el)=>{
+      let path = el.getAttribute('src')
+      if(!this.hasURLProtocol(path))
+        el.setAttribute('src',"file://" + this.files.base + '/' + path)
+    })
   }
 
   focusCurrentLine() {
