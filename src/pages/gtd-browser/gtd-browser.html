@@ -63,12 +63,13 @@
       <ion-badge item-end>File</ion-badge>
     </ion-item>    
     -->
-    <ion-item *ngFor="let item of filterItems" text-wrap (tap)="doEdit(item.file)" (press)="openFile(item.file)">
+    <ion-item *ngFor="let item of filterItems" text-wrap (click)="doEdit(item.file)">
       <span *ngFor="let token of item.tokens" [ngSwitch]="token.charAt(0)">
         <ion-badge *ngSwitchCase="'@'">{{token}}</ion-badge>
         <ion-badge *ngSwitchCase="'+'" color="secondary">{{token}}</ion-badge>
         <span *ngSwitchDefault>{{token}}</span>
       </span>
+      <ion-icon name="open" item-end (click)="openFile(item.file);$event.stopPropagation();"></ion-icon>
     </ion-item>        
   </ion-list>
   

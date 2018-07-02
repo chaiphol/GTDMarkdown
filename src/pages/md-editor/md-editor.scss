@@ -125,11 +125,11 @@ md-editor-page {
       word-break: normal;
       grid-column: 1 / 1;
       grid-row: 1;
-      padding-top: 40px;
-      padding-left: 20px;
+      padding-top: 30px;
+      padding-left: 10px;
     }
     #second-screen {
-      width: calc(50vw - 200px);
+      width: calc(100%);
     }
   }
   #second-screen {
@@ -139,7 +139,7 @@ md-editor-page {
     grid-row: 1;
     padding-top: 10px;
     padding-left: 10px;
-    padding-right: 180px;
+    padding-right: 10px;
 
     p {
       margin: 1em 0; }

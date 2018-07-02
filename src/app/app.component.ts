@@ -102,8 +102,8 @@ export class MyApp {
       if (res) this.settings.initConfig(JSON.parse(res));
       this.events.publish("config-loaded")
     });    
-    this.loadProjects()
-    this.loadContexts()
+    //this.loadProjects()
+    //this.loadContexts()
 
     this.events.subscribe("filter-domain-changed", (data) => {
       this.allContexts = data.contexts

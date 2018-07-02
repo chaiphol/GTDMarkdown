@@ -90,7 +90,7 @@ export class GtdBrowserPage {
         this.extFiles.jumpToDir(this.extFiles._base + '/Meaning/templates')
         this.events.publish('templates-opened')
       }
-      this.extFiles.jumpToDir(this.extFiles._base + '/' + this.workspace )
+      this.extFiles.jumpToDir(this.extFiles._base)
       this.loadFilesAndDirs()
     }
     else this.loadList()

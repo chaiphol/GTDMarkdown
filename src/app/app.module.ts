@@ -19,11 +19,12 @@ import { GtdBrowserModule } from "../pages/gtd-browser/gtd-browser.module";
 import { MarkjaxProvider } from '../providers/markjax/markjax';
 import { SettingsProvider } from '../providers/settings/settings';
 import { MdEditorPageModule } from '../pages/md-editor/md-editor.module';
-
+import { LongPressModule } from 'ionic-long-press'
 @NgModule({
   declarations: [MyApp, ExpandableComponent],
   imports: [
     BrowserModule,
+    LongPressModule,
     IonicModule.forRoot(MyApp),
     HomePageModule,
     FolderBrowserModule,

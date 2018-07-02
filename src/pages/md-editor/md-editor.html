@@ -37,7 +37,7 @@
   </span>
 
   <span *ngIf="smallScreen" id="small">
-    <ion-slides #slider>
+    <ion-slides #slider centerSlides="true">
       <ion-slide>
         <span #input id="first-screen" [class.notFocused]="textFocused" contenteditable="true" (input)="onEditInput()" data-text="Content">
         </span>
@@ -78,7 +78,7 @@
     </button>
   </ion-buttons>
 -->
-  <div id="status-bar">Word Count: {{wordCount}} </div>
+  <!--<div id="status-bar">Word Count: {{wordCount}} </div>-->
 
 <!--
   <ion-fab *ngIf="isTemplate" right bottom>
