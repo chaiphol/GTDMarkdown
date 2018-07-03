@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { Entry as IEntry, FileEntry, IFile, IWriteOptions } from '@ionic-native/file'
+import { FileOpener} from '@ionic-native/file-opener'
 
 @Injectable()
 export class ExternFilesProvider {
@@ -15,7 +16,7 @@ export class ExternFilesProvider {
   openedFile: string;
   defaultAppLocation: string = "Meaning";
 
-  constructor(private platform: Platform, private events: Events) {
+  constructor(private platform: Platform, private events: Events, private fileOpener: FileOpener) {
     console.log("Hello ExternFilesProvider Provider");
     this.checkPlatform();
   }
@@ -48,7 +49,8 @@ export class ExternFilesProvider {
 
   checkPlatform() {
     if (this.platform.is("electron")) this.initElectronFileCalls();
-    if (this.platform.is("cordova")) this.initCordovaFileCalls();
+    else if (this.platform.is("cordova")) this.initCordovaFileCalls();
+    else this.initCordovaFileCalls();
   }
 
   private initElectronFileCalls() {
@@ -216,7 +218,7 @@ export class ExternFilesProvider {
       .map(en => {
         return en.name;
       });
-    console.log(ret);
+    console.log('_cordovaListDirs return : ' +   ret);
     return ret;
   }
 
@@ -379,5 +381,15 @@ export class ExternFilesProvider {
   }
   onBeforeOpenFile(fileName: string) {
     this.openedFile = fileName.replace(/\.\w+$/g, ""); //remove suffix
+  }
+
+  openExternal(path): any {
+    if (this.platform.is("electron")) {
+      let _window:any = window
+      _window.require("electron").shell.openExternal(path)
+    }
+    else if (this.platform.is("cordova")) {
+      this.fileOpener.open(path,'')
+    }
   }
 }

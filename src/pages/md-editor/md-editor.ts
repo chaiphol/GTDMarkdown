@@ -63,7 +63,7 @@ export class MdEditorPage {
 
   fileName: string = '';
 
-  private shellObj: any;
+  //private shellObj: any;
 
   constructor(
     public navCtrl: NavController,
@@ -97,7 +97,7 @@ export class MdEditorPage {
     this.events.unsubscribe("editor-opened", r => this.onFileOpened(r));
     this.events.subscribe("editor-opened", r => this.onFileOpened(r));        
     const _window: any = window;
-    this.shellObj = _window.require("electron").shell;
+    //this.shellObj = _window.require("electron").shell;
   }
 
   ionViewDidEnter() {
@@ -228,14 +228,20 @@ export class MdEditorPage {
         
           console.log(path)        
         
-        this.shellObj.openExternal(path)
+        //this.shellObj.openExternal(path)
+        this.files.openExternal(path)
       })
     })
 
     elOutput.querySelectorAll('img').forEach((el)=>{
       let path = el.getAttribute('src')
       if(!this.hasURLProtocol(path))
-        el.setAttribute('src',"file://" + this.files.base + '/' + path)
+      {
+        let _url = this.files.base + '/' + path
+        if(!this.hasURLProtocol(_url))
+          _url = 'file://' + _url
+        el.setAttribute('src',_url)
+      }
     })
   }
 
@@ -580,7 +586,7 @@ export class MdEditorPage {
 
     console.log('md-editor.onFileOpened : ' + JSON.stringify(r))
     let content = await this.files.openFile(r)
-    if (this.slider) this.slider.slideTo(1);
+    //if (this.slider) this.slider.slideTo(1);
     this.input.nativeElement.innerHTML = this.wrapInDivs(content);
     this.render();
   }

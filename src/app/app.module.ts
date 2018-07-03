@@ -12,6 +12,7 @@ import { MyApp } from './app.component';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { File } from '@ionic-native/file';
+import { FileOpener} from '@ionic-native/file-opener';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ExternFilesProvider } from '../providers/extern-files/extern-files';
 import { FolderBrowserModule } from "../pages/folder-browser/folder-browser.module";
@@ -19,12 +20,11 @@ import { GtdBrowserModule } from "../pages/gtd-browser/gtd-browser.module";
 import { MarkjaxProvider } from '../providers/markjax/markjax';
 import { SettingsProvider } from '../providers/settings/settings';
 import { MdEditorPageModule } from '../pages/md-editor/md-editor.module';
-import { LongPressModule } from 'ionic-long-press'
+
 @NgModule({
   declarations: [MyApp, ExpandableComponent],
   imports: [
     BrowserModule,
-    LongPressModule,
     IonicModule.forRoot(MyApp),
     HomePageModule,
     FolderBrowserModule,
@@ -41,6 +41,7 @@ import { LongPressModule } from 'ionic-long-press'
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ExternFilesProvider,
     File,
+    FileOpener,
     Keyboard,
     MarkjaxProvider,
     MenuToggle,

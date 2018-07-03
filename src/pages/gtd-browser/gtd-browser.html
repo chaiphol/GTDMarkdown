@@ -69,7 +69,9 @@
         <ion-badge *ngSwitchCase="'+'" color="secondary">{{token}}</ion-badge>
         <span *ngSwitchDefault>{{token}}</span>
       </span>
-      <ion-icon name="open" item-end (click)="openFile(item.file);$event.stopPropagation();"></ion-icon>
+      <button ion-button icon-only item-end (click)="openFile(item.file);$event.stopPropagation();">
+        <ion-icon name="open"></ion-icon>
+      </button>
     </ion-item>        
   </ion-list>
   

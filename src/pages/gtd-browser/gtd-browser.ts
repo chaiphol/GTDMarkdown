@@ -117,11 +117,13 @@ export class GtdBrowserPage {
     this.files.splice(0, this.files.length)
     this.items.splice(0, this.files.length)
     this.folders = this.folders.concat(await this.extFiles.listDirs())
-    this.files = this.files.concat(await this.extFiles.listFiles(['.md']))
+    let f = await this.extFiles.listFiles(['.md'])
+    if(f)
+      this.files = this.files.concat(f)
     this.initBackUp(this.folders)
     let _contexts = []
     let _projects = []
-    
+    console.log(JSON.stringify(this.files))
     for(let i=0;i<this.files.length;i++) {
       let tokens = this.splitFileName(this.files[i])
       //this.items.push(tokens)      

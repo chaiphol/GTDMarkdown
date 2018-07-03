@@ -180,7 +180,7 @@ export class MyApp {
           this.showedAlert = true;
         });
       }
-
+      /*
       this.events.subscribe('folder-selected', () => {
         this.loadFiles()
       })
@@ -193,6 +193,7 @@ export class MyApp {
           this.searchbar.setFocus();
         }, 150);
       })
+      */
     });
   }
 

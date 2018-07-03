@@ -49,7 +49,10 @@ export class FolderBrowserPage {
       }
       this.loadFilesAndDirs()
     }
-    else this.loadList()
+    else { 
+      console.log("loadlist")
+      this.loadList()
+    }
     console.log('ionViewDidLoad FolderBrowserPage');
     this.path = this.extFiles.base;
     this.basePath = this.extFiles._base;
