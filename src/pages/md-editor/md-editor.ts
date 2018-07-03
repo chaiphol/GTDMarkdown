@@ -587,7 +587,10 @@ export class MdEditorPage {
     console.log('md-editor.onFileOpened : ' + JSON.stringify(r))
     let content = await this.files.openFile(r)
     //if (this.slider) this.slider.slideTo(1);
-    this.input.nativeElement.innerHTML = this.wrapInDivs(content);
+    if(content)      
+      this.input.nativeElement.innerHTML = this.wrapInDivs(content);
+    else
+      this.input.nativeElement.innerHTML = this.wrapInDivs('# Title')
     this.render();
   }
 

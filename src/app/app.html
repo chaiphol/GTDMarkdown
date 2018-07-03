@@ -45,6 +45,7 @@
         </ion-select>
       </ion-item-divider>
       <ion-item *ngFor="let project of filterProjects">{{project}}</ion-item>      
+<!--
       <expandable #mainList [expanded]="!keyword" (state)="searchKeywords($event)" title="Main">
         <span *ngFor="let p of state.main">
           <button menuClose ion-item no-lines *ngIf="p.element.do" (tap)="p.element.do()">
@@ -54,10 +55,11 @@
             {{p.title}}
           </button>
         </span>
-        <!-- <button menuClose ion-item no-lines (tap)="presentAboutModal()">
+        <button menuClose ion-item no-lines (tap)="presentAboutModal()">
           About
-        </button> -->
+        </button>         
       </expandable>
+    -->
       <!-- <span *ngFor="let key in state">
 
         <expandable #projects [expanded]="keyword.long===key" title="Bookmarks">
@@ -67,13 +69,13 @@
         </expandable>
       </span> -->
 
-
+<!--
       <expandable #projects [expanded]="keyword && keyword.long==='bookmark'" (state)="searchKeywords($event ? 'bookmark' : null)" title="Bookmarks">
         <button ion-item no-lines *ngFor="let path of state.bookmark" (tap)="loadProjectFiles(path.element.url)">
           {{path.title}}
         </button>
       </expandable>
-
+-->
       <!-- <expandable #filesList [expanded]="keyword && (keyword.long=='files' || (state.files && keyword.long=='bookmark'))" (state)="searchKeywords($event ? 'files' : null)" title="Files">
         <button menuClose ion-item no-lines *ngFor="let file of state.files" (tap)="openFile(file)">
           {{file.title}}
