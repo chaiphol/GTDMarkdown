@@ -13,6 +13,11 @@
         </button>        
       </ion-buttons>
   </ion-navbar>
+  <!--
+  <ion-toolbar no-border-top>
+    <ion-searchbar placeholder="Filter Items" (ionInput)="onFilterItems($event)"></ion-searchbar>
+  </ion-toolbar>
+-->
 </ion-header>
 <ion-content padding>
   <!-- <ion-searchbar (input)="search()" [(ngModel)]="searchWords"></ion-searchbar> -->
@@ -67,6 +72,8 @@
       <span *ngFor="let token of item.tokens" [ngSwitch]="token.charAt(0)">
         <ion-badge *ngSwitchCase="'@'">{{token}}</ion-badge>
         <ion-badge *ngSwitchCase="'+'" color="secondary">{{token}}</ion-badge>
+        <ion-badge *ngSwitchCase="'#'" color="light">{{token}}</ion-badge>
+        <ion-badge *ngSwitchCase="'('" color="light">{{token}}</ion-badge>        
         <span *ngSwitchDefault>{{token}}</span>
       </span>
       <button ion-button icon-only item-end (click)="openFile(item.file);$event.stopPropagation();">

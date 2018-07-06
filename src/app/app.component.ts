@@ -81,8 +81,10 @@ export class MyApp {
 
   allContexts: Array<any> = ['dummy']
   allProjects: Array<any> = ['dummy']
+  allPeople: Array<any> = ['dummy']
   filterContexts: Array<any> = []
   filterProjects: Array<any> = []
+  filterPeople: Array<any> = []
 
   constructor(public platform: Platform,
     public statusBar: StatusBar,
@@ -108,6 +110,7 @@ export class MyApp {
     this.events.subscribe("filter-domain-changed", (data) => {
       this.allContexts = data.contexts
       this.allProjects = data.projects
+      this.allPeople = data.people
     })
     
 

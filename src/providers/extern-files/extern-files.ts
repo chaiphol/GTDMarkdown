@@ -128,14 +128,19 @@ export class ExternFilesProvider {
     let res: Array<string> = this.fileCalls.readdirSync(baseURL);
     let ret = res.filter(en => {
       return this.fileCalls.statSync(baseURL + "/" + en).isFile();
-    });
-    let _ret = [];
-    ret.forEach(el => {
-      for (let suffix of suffixes) {
-        if (el.includes(suffix)) _ret.push(el);
-      }
-    });
-    return _ret;
+    });    
+    if(suffixes.length>0)
+    {
+      let _ret = [];
+      ret.forEach(el => {
+        for (let suffix of suffixes) {
+          if (el.includes(suffix)) _ret.push(el);
+        }
+      });
+      return _ret;
+    }
+    else 
+      return ret;
   }
 
   private _electronListFilesAsync(suffixes: Array<string>, callback: Function) {
@@ -233,15 +238,20 @@ export class ExternFilesProvider {
       .map(en => {
         return en.name;
       });
-    let _ret = [];
-    for (let suffix of suffixes) {
-      _ret = _ret.concat(
-        ret.filter(el => {
-          return el.includes(suffix);
-        })
-      );
+    if(suffixes.length>0)
+    {
+      let _ret = [];
+      for (let suffix of suffixes) {
+        _ret = _ret.concat(
+          ret.filter(el => {
+            return el.includes(suffix);
+          })
+        );
+      }
+      return _ret;
     }
-    return _ret;
+    else 
+      return ret;
   }
 
   private async _cordovaGetMetadata(fileNames) {
@@ -384,6 +394,7 @@ export class ExternFilesProvider {
   }
 
   openExternal(path): any {
+    console.log('openExternal ' + path)
     if (this.platform.is("electron")) {
       let _window:any = window
       _window.require("electron").shell.openExternal(path)

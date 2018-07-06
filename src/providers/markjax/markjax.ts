@@ -24,22 +24,23 @@ export class MarkjaxProvider {
   constructor(private events: Events) {
     console.log("Hello MarkjaxProvider Provider");
     var renderer = new marked.Renderer();
-    renderer.listitem = text => {
-      if (/^\s*\[[x ]\]\s*/.test(text)) {
-        text = text
-          .replace(
-            /^\s*\[ \]\s*/,
-            '<ion-icon name="square-outline"></ion-icon>'
-          )
-          .replace(
-            /^\s*\[x\]\s*/,
-            '<ion-icon name="checkbox-outline"></ion-icon> '
-          );
-        return '<li style="list-style: none">' + text + "</li>";
-      } else {
-        return "<li>" + text + "</li>";
-      }
-    };
+    
+    // renderer.listitem = text => {
+    //   if (/^\s*\[[x ]\]\s*/.test(text)) {
+    //     text = text
+    //       .replace(
+    //         /^\s*\[ \]\s*/,
+    //         '<ion-icon name="square"></ion-icon>'
+    //       )
+    //       .replace(
+    //         /^\s*\[x\]\s*/,
+    //         '<ion-icon name="checkbox"></ion-icon> '
+    //       );
+    //     return '<li style="list-style: none">' + text + "</li>";
+    //   } else {
+    //     return "<li>" + text + "</li>";
+    //   }
+    // };
     renderer.heading = (text, level) => {
       this.headers.push({id:`H${this.headers.length+1}`, content: text, level})
       return `<h${level} id=H${this.headers.length}> ${text} </h${level}>`;

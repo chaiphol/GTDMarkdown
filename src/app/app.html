@@ -45,6 +45,13 @@
         </ion-select>
       </ion-item-divider>
       <ion-item *ngFor="let project of filterProjects">{{project}}</ion-item>      
+      <ion-item-divider>
+        <ion-label>People</ion-label>
+        <ion-select [(ngModel)]="filterPeople" interface="popover" multiple="true" (ionChange)="onFilterChange($event)">
+          <ion-option *ngFor="let person of allPeople">{{person}}</ion-option>          
+        </ion-select>
+      </ion-item-divider>
+      <ion-item *ngFor="let people of filterPeople">{{person}}</ion-item>      
 <!--
       <expandable #mainList [expanded]="!keyword" (state)="searchKeywords($event)" title="Main">
         <span *ngFor="let p of state.main">

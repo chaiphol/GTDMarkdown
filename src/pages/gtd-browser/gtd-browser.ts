@@ -63,6 +63,8 @@ export class GtdBrowserPage {
 
   workspace: string = 'Meaning1';
 
+  filterCriteria: any = null;
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -117,21 +119,25 @@ export class GtdBrowserPage {
     this.files.splice(0, this.files.length)
     this.items.splice(0, this.files.length)
     this.folders = this.folders.concat(await this.extFiles.listDirs())
-    let f = await this.extFiles.listFiles(['.md'])
+    let f = await this.extFiles.listFiles([])
     if(f)
       this.files = this.files.concat(f)
     this.initBackUp(this.folders)
     let _contexts = []
     let _projects = []
+    let _people = []
     console.log(JSON.stringify(this.files))
     for(let i=0;i<this.files.length;i++) {
       let tokens = this.splitFileName(this.files[i])
       //this.items.push(tokens)      
       _contexts = _contexts.concat(tokens.filter(token => token.startsWith('@')))
       _projects = _projects.concat(tokens.filter( token => token.startsWith('+')))
+      _people = _people.concat(_projects.filter( token => token.startsWith('++')))
     } 
-    this.events.publish('filter-domain-changed', {contexts: new Set(_contexts), projects: new Set(_projects)})   
-    this.onFilterChanged({contexts: [], projects: []})
+    //this.events.publish('filter-domain-changed', {contexts: new Set(_contexts), projects: new Set(_projects)})       
+    let _peopleSet = new Set(_people)
+    this.events.publish('filter-domain-changed', {contexts: new Set(_contexts), projects: new Set([..._projects].filter(x => !_peopleSet.has(x))), people: _peopleSet})   
+    this.onFilterChanged(null)
   }
 
   initBackUp(arr){
@@ -162,12 +168,17 @@ export class GtdBrowserPage {
     */
    //const modal = this.modalCtrl.create(MdEditorPage, {file:fileName});
    //modal.present();
-   this.navCtrl.push(MdEditorPage,{file:fileName});
+   if(fileName.endsWith('.md')) {
+    this.navCtrl.push(MdEditorPage,{file:fileName});
 
-   let ret = {content: null, isTemplate: false}
-   ret.content = await this.extFiles.openFile(fileName)
-   this.fileSelected = true   
-   this.events.publish('editor-opened', fileName)
+    let ret = {content: null, isTemplate: false}
+    ret.content = await this.extFiles.openFile(fileName)
+    this.fileSelected = true   
+    this.events.publish('editor-opened', fileName)
+   }
+   else {
+     this.extFiles.openExternal(this.extFiles.base + '/' + fileName)
+   }
   }
 
   async goTo(dirName){
@@ -331,6 +342,12 @@ export class GtdBrowserPage {
   }
 
   onFilterChanged(r) {
+    if(r)
+      this.filterCriteria = r
+    else
+      r = this.filterCriteria
+    if(!r)
+      r = {contexts: [], projects: [], people: []}
     console.log('gtdbrowser-onfilterchanged ' + JSON.stringify(r))
     this.filterItems.splice(0,this.filterItems.length)
     let hasContexts = []
@@ -357,4 +374,17 @@ export class GtdBrowserPage {
     }
   }
 
+  onFilterItems(ev: any) {
+    /*
+    this.setItems();
+    let val = ev.target.value;
+
+    if (val && val.trim() !== '') {
+      this.items = this.items.filter(function(item) {
+        return item.toLowerCase().includes(val.toLowerCase());
+      });
+    }
+    */
+  }
+  
 }
