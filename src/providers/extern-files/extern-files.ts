@@ -310,6 +310,7 @@ export class ExternFilesProvider {
     return this.base;
   }
   prevDir() {
+    console.log('prevDir() base = ' + this.base + ' _base = ' + this._base)
     if (this.base !== this._base)
       this.base = this.base.replace(/\/([^\/]+)\/?$/g, "");
     return this.base;

@@ -82,9 +82,11 @@ export class MyApp {
   allContexts: Array<any> = ['dummy']
   allProjects: Array<any> = ['dummy']
   allPeople: Array<any> = ['dummy']
+  allDue: Array<any> = ['dummy']
   filterContexts: Array<any> = []
   filterProjects: Array<any> = []
   filterPeople: Array<any> = []
+  groupBy: String = "None"
 
   constructor(public platform: Platform,
     public statusBar: StatusBar,
@@ -111,6 +113,7 @@ export class MyApp {
       this.allContexts = data.contexts
       this.allProjects = data.projects
       this.allPeople = data.people
+      this.allDue = data.dues
     })
     
 
@@ -118,15 +121,18 @@ export class MyApp {
     //about as an alert message
     this.events.subscribe("config-loaded", (data) => {      
       this.state.main = [
-        { title: 'New', element: { do: () => { this.nav.setRoot(HomePage); this.events.publish('new-file') } } },
-        { title: 'Open File', element: { do: () => { this.openPage({ component: FolderBrowserPage, params: { 'fileSelect': true } }) } } },
-        { title: 'Save', element: { do: () => { this.menuCtrl.close(); this.events.publish('to-save-file') } } },
-        { title: 'Save As', element: { do: () => { this.menuCtrl.close(); this.events.publish('to-save-file-as') } } },
-        { title: 'Open Templates', element: { do: () => { this.openPage({ component: FolderBrowserPage, params: { 'fileSelect': true, 'templates': true } }) } } },
-        { title: "Settings", element: { do: () => { this.menuCtrl.close(); this.openPage({ component: SettingsPage }) } } },
-        { title: "Export", element: { do: () => { this.showExportMenu() } } },
-        { title: "About", element: { do: () => { this.showAbout() } } }
+        //{ title: 'New', element: { do: () => { this.nav.setRoot(HomePage); this.events.publish('new-file') } } },
+        //{ title: 'Open File', element: { do: () => { this.openPage({ component: FolderBrowserPage, params: { 'fileSelect': true } }) } } },
+        //{ title: 'Save', element: { do: () => { this.menuCtrl.close(); this.events.publish('to-save-file') } } },
+        //{ title: 'Save As', element: { do: () => { this.menuCtrl.close(); this.events.publish('to-save-file-as') } } },
+        //{ title: 'Open Templates', element: { do: () => { this.openPage({ component: FolderBrowserPage, params: { 'fileSelect': true, 'templates': true } }) } } },
+        //{ title: "Settings", element: { do: () => { this.menuCtrl.close(); this.openPage({ component: SettingsPage }) } } },
+        //{ title: "Export", element: { do: () => { this.showExportMenu() } } },
+        //{ title: "About", element: { do: () => { this.showAbout() } } }
       ];
+
+      if(this.settings.getHome())
+        this.extFiles._base = this.settings.getHome()
 
       this.backupState.main = this.state.main.concat();
 
@@ -403,4 +409,109 @@ export class MyApp {
     console.log("filterchange")
     this.events.publish('filter-changed',{contexts: this.filterContexts, projects: this.filterProjects})
   }
+
+  onGroupByChange(selectedValue: any) {
+    console.log("groupByChange : " + selectedValue)
+    let result = [];
+    switch(selectedValue) {
+      case "Context":
+          if(this.filterContexts.length>0)          
+            result = this.filterContexts
+          else
+            result =Array.from(this.allContexts)
+          break
+      case "Project":
+          if(this.filterProjects.length>0)          
+            result = this.filterProjects
+          else
+            result = Array.from(this.allProjects)
+          break          
+      case "People":      
+          if(this.filterPeople.length>0)          
+            result = this.filterPeople
+          else
+            result = Array.from(this.allPeople)
+          break                    
+      case "Due":
+          result = Array.from(this.allDue).sort(this.sortFromNow)
+          break;
+    }
+    this.events.publish('groupby-changed',result)
+  }
+/*
+  sortFromNow(a,b) {
+    let tokensA = a.split(' ')
+    let tokensB = b.split(' ')
+    if(tokensA[0]=='in') {
+      if(tokensB[0]=='in') {
+        if(tokensA[1]=='a') tokensA[1]='1'
+        if(tokensB[1]=='a') tokensB[1]='1'
+        return parseInt(tokensA[1])-parseInt(tokensB[1])
+      } else {
+        return 1
+      }
+    } else if(tokensA[tokensA.length-1]=='ago') {
+      if(tokensB[0]=='in') {        
+        return 1;
+      } else if(tokensB[tokensB.length-1]=='ago') {
+        if(tokensA[0]=='a') tokensA[1]='1'
+        if(tokensB[0]=='a') tokensB[1]='1'
+        return parseInt(tokensA[0])-parseInt(tokensB[0])
+      } else {
+        return 0
+      }
+    }
+    else {
+      if(tokensB[0]=='in') {
+        return -1
+      } else if(tokensB[tokensB.length-1]=='ago') {
+        return 1
+      } else {
+        return 0
+      }
+    }
+  }
+  */
+
+  sortFromNow(a,b) {
+    let tokensA = a.split(' ')
+    let tokensB = b.split(' ')
+    let daysA,daysB,prefixA,prefixB,unitA,unitB
+
+    if(tokensA[0]=='in') {
+      prefixA = tokensA[0];
+      daysA = parseInt(tokensA[1]);      
+      unitA = tokensA[2];
+    } else if(tokensA[2]=='ago') {
+      prefixA = tokensA[2]
+      daysA = parseInt(tokensA[0]);
+      unitA = tokensA[1]
+    } else {
+      prefixA = 'a'
+    }
+
+    if(tokensB[0]=='in') {
+      prefixB = tokensB[0];
+      daysB = parseInt(tokensB[1]);      
+      unitB = tokensB[2];
+    } else if(tokensB[2]=='ago') {
+      prefixB = tokensB[2]
+      daysB = parseInt(tokensB[0]);
+      unitB = tokensB[1]
+    } else {
+      prefixB = 'a'    
+    }
+    
+    if(prefixA>prefixB) return 1
+    else if(prefixA<prefixB) return -1
+    else {
+      if(unitA>unitB) return 1
+      else if(unitA<unitB) return -1
+      else {
+        if(daysA>daysB) return 1
+        else return -1
+      }
+    }
+  }
+
 }

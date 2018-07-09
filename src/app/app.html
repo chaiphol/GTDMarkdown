@@ -32,6 +32,16 @@
   <ion-content id="menu" padding-left>
     <ion-list>
       <ion-item-divider>
+        <ion-label>Group By</ion-label>
+        <ion-select [(ngModel)]="groupBy" interface="popover" multiple="false" (ionChange)="onGroupByChange($event)">
+          <ion-option value="None">None</ion-option>          
+          <ion-option value="Context">Context</ion-option>
+          <ion-option value="Project">Project</ion-option>
+          <ion-option value="People">People</ion-option>
+          <ion-option value="Due">Due</ion-option>
+        </ion-select>
+      </ion-item-divider>      
+      <ion-item-divider>
         <ion-label>Context</ion-label>
         <ion-select [(ngModel)]="filterContexts" interface="popover" multiple="true" (ionChange)="onFilterChange($event)">
           <ion-option *ngFor="let context of allContexts">{{context}}</ion-option>          
@@ -52,7 +62,7 @@
         </ion-select>
       </ion-item-divider>
       <ion-item *ngFor="let people of filterPeople">{{person}}</ion-item>      
-<!--
+
       <expandable #mainList [expanded]="!keyword" (state)="searchKeywords($event)" title="Main">
         <span *ngFor="let p of state.main">
           <button menuClose ion-item no-lines *ngIf="p.element.do" (tap)="p.element.do()">
@@ -62,11 +72,8 @@
             {{p.title}}
           </button>
         </span>
-        <button menuClose ion-item no-lines (tap)="presentAboutModal()">
-          About
-        </button>         
       </expandable>
-    -->
+
       <!-- <span *ngFor="let key in state">
 
         <expandable #projects [expanded]="keyword.long===key" title="Bookmarks">

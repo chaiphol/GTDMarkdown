@@ -8,7 +8,8 @@ interface IConfig{
   textFont: string,
   textColor: string,
   textSize: string,
-  textFocus: boolean
+  textFocus: boolean,
+  home: string,
 }
 
 
@@ -27,7 +28,8 @@ export class SettingsProvider {
       textFont: 'roboto',
       textColor: '',
       textSize: 'normal',
-      textFocus: true
+      textFocus: true,
+      home: ''
     }
     this.config.paths.pop()
   }
@@ -108,5 +110,13 @@ export class SettingsProvider {
 
   getTextFocus(){
     return this.config.textFocus
+  }
+
+  setHome(home:string) {
+    this.config.home = home
+  }
+
+  getHome() {
+    return this.config.home
   }
 }

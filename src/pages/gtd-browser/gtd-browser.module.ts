@@ -4,7 +4,7 @@ import { GtdBrowserPage } from './gtd-browser';
 
 @NgModule({
   declarations: [
-    GtdBrowserPage,
+    GtdBrowserPage,    
   ],
   imports: [
     IonicPageModule.forChild(GtdBrowserPage),

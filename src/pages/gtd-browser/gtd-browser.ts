@@ -5,6 +5,8 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, Events, MenuController,ModalController } from 'ionic-angular';
 import { ExternFilesProvider } from '../../providers/extern-files/extern-files'
 import { FolderBrowserPage} from './../folder-browser/folder-browser'
+import { ExpandableComponent } from '../../components/expandable/expandable'
+import * as moment from 'moment'
 /*
 class TodoTxt {
   private tokens: string[]
@@ -64,6 +66,7 @@ export class GtdBrowserPage {
   workspace: string = 'Meaning1';
 
   filterCriteria: any = null;
+  groupBySet: Array<any> = [];
 
   constructor(
     public navCtrl: NavController,
@@ -76,6 +79,7 @@ export class GtdBrowserPage {
     private settings: SettingsProvider,
     private markjax: MarkjaxProvider) {
       this.events.subscribe("filter-changed", r => this.onFilterChanged(r));
+      this.events.subscribe("groupby-changed", r => this.onGroupByChange(r));
       this.events.subscribe("folder-selected", (r) => {
         this.path = this.extFiles.base
         this.loadFilesAndDirs()
@@ -126,6 +130,7 @@ export class GtdBrowserPage {
     let _contexts = []
     let _projects = []
     let _people = []
+    let _dues = []
     console.log(JSON.stringify(this.files))
     for(let i=0;i<this.files.length;i++) {
       let tokens = this.splitFileName(this.files[i])
@@ -133,12 +138,19 @@ export class GtdBrowserPage {
       _contexts = _contexts.concat(tokens.filter(token => token.startsWith('@')))
       _projects = _projects.concat(tokens.filter( token => token.startsWith('+')))
       _people = _people.concat(_projects.filter( token => token.startsWith('++')))
+      _dues = _dues.concat(tokens[1])
     } 
     //this.events.publish('filter-domain-changed', {contexts: new Set(_contexts), projects: new Set(_projects)})       
     let _peopleSet = new Set(_people)
-    this.events.publish('filter-domain-changed', {contexts: new Set(_contexts), projects: new Set([..._projects].filter(x => !_peopleSet.has(x))), people: _peopleSet})   
+    this.events.publish('filter-domain-changed', {
+      contexts: new Set(_contexts), 
+      projects: new Set([..._projects].filter(x => !_peopleSet.has(x))), 
+      people: _peopleSet,
+      dues: new Set([..._dues])
+    })   
     this.onFilterChanged(null)
   }
+
 
   initBackUp(arr){
     this.foldersBackup.splice(0, this.folders.length)
@@ -175,6 +187,9 @@ export class GtdBrowserPage {
     ret.content = await this.extFiles.openFile(fileName)
     this.fileSelected = true   
     this.events.publish('editor-opened', fileName)
+   } else if(fileName.endsWith('.url')) {
+     let path = await this.extFiles.openFile(fileName)
+     this.extFiles.openExternal(path)
    }
    else {
      this.extFiles.openExternal(this.extFiles.base + '/' + fileName)
@@ -256,6 +271,7 @@ export class GtdBrowserPage {
   }
 
   splitFileName(txt){
+    console.log('splitFileName')
     let  reTrim = /^\s+|\s+$/g
     let reSplitSpaces = /\s+/
     let rePriority = /^\([A-Z]\)$/
@@ -264,6 +280,56 @@ export class GtdBrowserPage {
 
     tokens = line.split(reSplitSpaces);
     tokens[tokens.length-1] = tokens[tokens.length-1].split('.')[0]
+    
+    let t0 = tokens[0]
+    console.log('t0 = ' + t0)
+    if(t0.length>2)
+    {
+      if(!(t0.charAt(0)=='(' && t0.charAt(2)==')'))
+      {
+        tokens.splice(0,0,'(D)')
+      }
+    }
+    else
+      tokens.splice(0,0,'(D)')
+
+    let due = ''
+    if(tokens.length>1) due = tokens[tokens.length-1]
+    if(due.startsWith('By20'))
+    {
+      due = moment(due.substring(2),'YYYY-MM-DD').fromNow()      
+      tokens = tokens.slice(0,-1)
+    }
+    else
+      due = ''       
+    
+    tokens.splice(1,0,due)
+
+   // if(!tokens[0]) tokens[0]='dummy'
+/*
+    let due = tokens[tokens.length-1]
+    if(due.startsWith('By20'))
+    {
+      due = due.substring(2)
+      tokens = tokens.slice(0,-1)
+    }
+    else
+      due = ''       
+    tokens = tokens.splice(1,0,due)
+
+    let prty = tokens[0]
+    if(prty!==undefined)
+    {
+      if(!(prty.charAt(0)=='(' && prty.charAt(2)==')'))
+      {
+        tokens = tokens.splice(0,0,'( )')
+      }
+    }
+    else
+      tokens = tokens.splice(0,0,'( )')
+      */
+    console.log(JSON.stringify(tokens))
+  
     return tokens;
   }
 
@@ -374,6 +440,16 @@ export class GtdBrowserPage {
     }
   }
 
+  onGroupByChange(r) {
+    this.groupBySet.splice(0,this.groupBySet.length)    
+    this.groupBySet = this.groupBySet.concat(r)    
+    console.log('onGroupByChange ' + JSON.stringify(this.groupBySet))
+  }
+
+  filterGroup(list:Array<any>,group): Array<any> {
+    return list.filter(item => item.tokens.includes(group))
+  }
+
   onFilterItems(ev: any) {
     /*
     this.setItems();
@@ -386,5 +462,40 @@ export class GtdBrowserPage {
     }
     */
   }
+
+  doHomeSetting() {
+    let prompt = this.alertCtrl.create({
+      inputs: [
+        {
+          name: 'homepath',
+          placeholder: 'Enter home path'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            console.log('home path saved : ' + data.homepath)
+            this.extFiles._base = data.homepath
+            this.settings.setHome(data.homepath)
+            this.extFiles.base = this.extFiles._base
+            this.path = this.extFiles.base
+            this.loadFilesAndDirs()
+          }
+        }
+      ]
+    });
+    prompt.present();
+    prompt.onDidDismiss((r)=>{
+      //this.makeDir(r.dirName)      
+    })
+  }
+  
   
 }
