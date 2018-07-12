@@ -43,16 +43,19 @@
   
   <ion-list *ngIf="groupBySet.length==0">
     <ion-item *ngFor="let item of filterItems" text-wrap (click)="doEdit(item.file)">
-      <button ion-button round outline strong item-start>{{item.tokens[0].charAt(1)}}</button>
+      <button ion-button clear icon-only item-start (click)="doMoveFileToList(item.file);$event.stopPropagation();">
+        <ion-icon name="list"></ion-icon>
+      </button>
+      <button ion-button strong item-start [color]="getPriorityColor(item.tokens[0])">{{item.tokens[0].charAt(1)}}</button>
       <span *ngFor="let token of item.tokens.slice(2)" [ngSwitch]="token.charAt(0)">
         <ion-badge *ngSwitchCase="'@'">{{token}}</ion-badge>
         <ion-badge *ngSwitchCase="'+'" color="secondary">{{token}}</ion-badge>
         <ion-badge *ngSwitchCase="'#'" color="light">{{token}}</ion-badge>
         <ion-badge *ngSwitchCase="'('" color="light">{{token}}</ion-badge>        
-        <span *ngSwitchDefault>{{token}}</span>          
+        <span *ngSwitchDefault ion-text [color]="getEntryColor(item.tokens[0],item.tokens[1])">{{token}}</span>          
       </span>
-      <br><span ion-text color="primary">{{item.tokens[1]}}</span>
-      <button ion-button icon-only item-end (click)="openFile(item.file);$event.stopPropagation();">
+      <br><span ion-text color="primary">{{item.tokens[1]}}</span>      
+      <button ion-button clear icon-only item-end (click)="openFile(item.file);$event.stopPropagation();">
         <ion-icon name="open"></ion-icon>
       </button>
     </ion-item>        
@@ -84,18 +87,21 @@
     <ion-item-group *ngFor="let group of groupBySet">      
       <ion-item-divider color="light">{{group}}</ion-item-divider>
         <ion-item *ngFor="let item of filterGroup(filterItems,group)" text-wrap (click)="doEdit(item.file)">
-          <button ion-button round outline strong item-start>{{item.tokens[0].charAt(1)}}</button>
-          <span *ngFor="let token of item.tokens.slice(2)" [ngSwitch]="token.charAt(0)">
-            <ion-badge *ngSwitchCase="'@'">{{token}}</ion-badge>
-            <ion-badge *ngSwitchCase="'+'" color="secondary">{{token}}</ion-badge>
-            <ion-badge *ngSwitchCase="'#'" color="light">{{token}}</ion-badge>
-            <ion-badge *ngSwitchCase="'('" color="light">{{token}}</ion-badge>        
-            <span *ngSwitchDefault>{{token}}</span>          
-          </span>
-          <br>due <span ion-text color="primary">{{item.tokens[1]}}</span>
-          <button ion-button icon-only item-end (click)="openFile(item.file);$event.stopPropagation();">
-            <ion-icon name="open"></ion-icon>
-          </button>
+            <button ion-button clear icon-only item-start (click)="doMoveFileToList(item.file);$event.stopPropagation();">
+                <ion-icon name="list"></ion-icon>
+              </button>
+              <button ion-button strong item-start [color]="getPriorityColor(item.tokens[0])">{{item.tokens[0].charAt(1)}}</button>
+              <span *ngFor="let token of item.tokens.slice(2)" [ngSwitch]="token.charAt(0)">
+                <ion-badge *ngSwitchCase="'@'">{{token}}</ion-badge>
+                <ion-badge *ngSwitchCase="'+'" color="secondary">{{token}}</ion-badge>
+                <ion-badge *ngSwitchCase="'#'" color="light">{{token}}</ion-badge>
+                <ion-badge *ngSwitchCase="'('" color="light">{{token}}</ion-badge>        
+                <span *ngSwitchDefault ion-text [color]="getEntryColor(item.tokens[0],item.tokens[1])">{{token}}</span>          
+              </span>
+              <br><span ion-text color="primary">{{item.tokens[1]}}</span>      
+              <button ion-button clear icon-only item-end (click)="openFile(item.file);$event.stopPropagation();">
+                <ion-icon name="open"></ion-icon>
+              </button>
         </ion-item> 
     </ion-item-group>
   </ion-list>

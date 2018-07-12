@@ -133,6 +133,7 @@ md-editor-page {
     }
   }
   #second-screen {
+    user-select:auto;
     height: 100%;
     word-break: normal;
     grid-column: 2 / 2;

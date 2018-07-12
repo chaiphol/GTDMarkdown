@@ -13,7 +13,7 @@ import {
   PopoverController,
   ToastController,
 } from "ionic-angular";
-//import { PopUp } from "./home-view-popup";
+import { PopUp } from "./md-editor-view-popup";
 import { ExternFilesProvider } from "../../providers/extern-files/extern-files";
 import { Slides } from "ionic-angular";
 import { Keyboard } from "@ionic-native/keyboard";
@@ -24,9 +24,11 @@ import { Keyboard } from "@ionic-native/keyboard";
   selector: "md-editor-page",
   templateUrl: "md-editor.html"
 })
+
+
 export class MdEditorPage {
   @ViewChild("input") input: any;
-  //@ViewChild(PopUp) popup: PopUp;
+  @ViewChild(PopUp) popup: PopUp;
   @ViewChild("output") output: any;
   @ViewChild("slider") slider: Slides;
   @ViewChild('searchBar') searchbar: any;
@@ -68,7 +70,7 @@ export class MdEditorPage {
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    private files: ExternFilesProvider,
+    private files: ExternFilesProvider,    
     private events: Events,
     private alertCtrl: AlertController,
     private toastCtrl: ToastController,
@@ -154,8 +156,8 @@ export class MdEditorPage {
     return string;
   }
 
-  getWordCount(text: string) {
-    this.wordCount = text.length !== 0 ? text.match(/([a-zA-Z])+/g).length : 0;
+  getWordCount(text: string) {    
+    this.wordCount = (text!=null)&&(text.length !== 0) ? text.match(/([a-zA-Z])+/g).length : 0;
   }
 
   adjustHeight(elInput, elOutput) {
@@ -381,7 +383,7 @@ export class MdEditorPage {
     let yOffset = document.getElementById(element).offsetTop;
     // this.content.scrollTo(0, yOffset, 4000)
   }
-/*
+
   showPopover(e) {
     // console.log(e);
     let popover = this.popoverCtrl.create(
@@ -396,7 +398,7 @@ export class MdEditorPage {
 
     popover.present({ direction: "down", ev: e });
   }
-*/
+
   showToast(message) {
     const toast = this.toastCtrl.create({
       message: message,
@@ -507,6 +509,15 @@ export class MdEditorPage {
       this.files.saveFile(r + ".md", this.input.nativeElement.innerText);
       this.showToast("File Saved");
     }
+  }
+
+  doExport() {
+    const fileName = this.files.openedFile;
+    const base = this.files.base.replace('/','\\')
+    let cmd = 'pandoc -F filter-mermaid.cmd -o "' + base + '\\' + fileName + '.docx" "' + base + '\\' +  fileName + '.md"'    
+    this.files.saveFile("temp.bat",cmd.replace('/','\\'))
+    this.files.openExternal(this.files.base + '/temp.bat')     
+    this.files.openExternal(this.files.base + '/' + fileName + '.docx')
   }
 
   /**

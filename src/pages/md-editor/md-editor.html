@@ -1,11 +1,11 @@
 <ion-header>
-    <ion-navbar>
-      <!--
-      <button ion-button [menuToggle]="activeMenu">
-        <ion-icon name="menu"></ion-icon>
-      </button>
-      -->
-      <ion-title>{{fileName}}</ion-title>
+    <ion-navbar>      
+      <ion-title>{{fileName}}</ion-title>      
+      <ion-buttons end>
+          <button ion-button icon-only (click)="doExport()">
+              <ion-icon name="share-alt"></ion-icon>
+            </button>          
+        </ion-buttons>
     </ion-navbar>
   </ion-header>
 <ion-content fullscreen (document:keyup)="onKeyUp($event)" (document:selectionchange)="onSelectionChange($event)" (window:resize)="onResize($event)">
@@ -70,14 +70,14 @@
       <ion-icon color='black' name="redo"></ion-icon>
     </button>
   </ion-buttons>
-
+-->
 
   <ion-buttons *ngIf='!smallScreen' class="bottom-right">
     <button ion-button clear (mousedown)="showPopover($event)">
       <ion-icon color='black' name="eye"></ion-icon>
     </button>
   </ion-buttons>
--->
+
   <!--<div id="status-bar">Word Count: {{wordCount}} </div>-->
 
 <!--

@@ -20,9 +20,9 @@ import { GtdBrowserModule } from "../pages/gtd-browser/gtd-browser.module";
 import { MarkjaxProvider } from '../providers/markjax/markjax';
 import { SettingsProvider } from '../providers/settings/settings';
 import { MdEditorPageModule } from '../pages/md-editor/md-editor.module';
-import { MomentPipe } from '../pipes/moment/moment'
+
 @NgModule({
-  declarations: [MyApp, ExpandableComponent, MomentPipe],
+  declarations: [MyApp, ExpandableComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),

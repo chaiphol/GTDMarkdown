@@ -25,7 +25,7 @@ function createWindow() {
     var url = 'file://' + __dirname + '/../www/index.html';
     var Args = process.argv.slice();
     let port = '8100', address = 'localhost'
-    let devMode = true;
+    let devMode = false;
     Args.forEach(function (val, i) {
       if (val === 'test') devMode = true;
       if(devMode){
@@ -66,7 +66,7 @@ function createWindow() {
     //   4}
     // })
 
-  //   win.webContents.openDevTools()
+    win.webContents.openDevTools()
 
 
     win.on('closed', () => {

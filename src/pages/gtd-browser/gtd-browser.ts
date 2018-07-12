@@ -497,5 +497,74 @@ export class GtdBrowserPage {
     })
   }
   
-  
+  doMoveFileToList(file) {
+    console.log('doMoveFileToList : ' + file)    
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Target list');
+
+    alert.addInput({
+      type: 'radio',
+      label: 'Inbox',
+      value: 'Inbox',
+      checked: false
+    });
+    alert.addInput({
+      type: 'radio',
+      label: 'Next',
+      value: 'Next',
+      checked: false
+    });
+    alert.addInput({
+      type: 'radio',
+      label: 'Waiting',
+      value: 'Waiting',
+      checked: false
+    });
+    alert.addInput({
+      type: 'radio',
+      label: 'Maybe',
+      value: 'Maybe',
+      checked: false
+    });
+
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {        
+        let tokens = this.extFiles.base.split('@')
+        if(tokens.length==2) {
+          if(tokens[1]!=data) {
+            let newPath = tokens[0] + '@' + data
+            console.log('newPath = ' + newPath)
+            this.extFiles.renameFile(this.extFiles.base,file,newPath,file)
+            this.doRefresh()
+          }
+        }
+      }
+    });
+    alert.present();
+  }
+    
+   getEntryColor(priority,due) 
+   {
+     if(priority=='(X)') return 'light'
+     else if(due.endsWith('ago')) return 'danger'
+     else return 'dark'
+   }
+
+   getPriorityColor(priority)
+   {
+     switch(priority) {
+        case '(A)':
+          return 'danger'
+        case '(B)':
+          return 'primary'
+        case '(C)':
+          return 'secondary'
+        case '(D)':
+          return 'light'
+        default: 
+          return 'dark'
+     }
+   }
 }
