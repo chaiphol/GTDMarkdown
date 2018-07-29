@@ -5,16 +5,19 @@
     </button>
     <ion-title>{{path}}</ion-title>
     <ion-buttons end>
-        <button ion-button icon-only (click)="doSelectWS()">
-            <ion-icon name="folder"></ion-icon>
-          </button>
-        <button ion-button icon-only (click)="doHomeSetting()">
-          <ion-icon name="home"></ion-icon>
-        </button>        
-        <button ion-button icon-only (click)="doRefresh()">
-          <ion-icon name="refresh"></ion-icon>
-        </button>        
-      </ion-buttons>
+      <button ion-button icon-only (click)="doSelectFolder()">
+        <ion-icon name="folder"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="doSelectWS()">
+        <ion-icon name="browsers"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="doHomeSetting()">
+        <ion-icon name="home"></ion-icon>
+      </button>        
+      <button ion-button icon-only (click)="doRefresh()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>        
+    </ion-buttons>
   </ion-navbar>
   <!--
   <ion-toolbar no-border-top>

@@ -45,12 +45,26 @@ export class MarkjaxProvider {
       this.headers.push({id:`H${this.headers.length+1}`, content: text, level})
       return `<h${level} id=H${this.headers.length}> ${text} </h${level}>`;
     };
-
+    
     renderer.code = function (code, language) {
-      if(code.match(/^sequenceDiagram/)||code.match(/^graph/)){
-         return '<div class="mermaid">'+code+'</div>';
+      if(code.match(/^sequenceDiagram/)||code.match(/^graph/)||code.match(/^gantt/) || language === 'sequenceDiagram' || language === 'graph' || language === 'gantt'
+        && code !== ''){
+          return '<div class="mermaid">'+code+'</div>';
+      }
+      else{
+          return '<pre><code>'+require('highlight.js').highlightAuto(code).value+'</code></pre>';
       }
     };
+  
+    
+    // renderer.code = function (code, language) {
+    //   if(code.match(/^sequenceDiagram/)||code.match(/^graph/)){
+    //      return '<div class="mermaid">'+code+'</div>';
+    //   }
+    //   else {
+    //     return '<pre><code>' + code + '</code></pre>'
+    //   }
+    // };
     
     this.settings = {
       renderer,

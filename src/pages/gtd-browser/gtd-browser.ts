@@ -6,6 +6,7 @@ import { IonicPage, NavController, NavParams, AlertController, Events, MenuContr
 import { ExternFilesProvider } from '../../providers/extern-files/extern-files'
 import { FolderBrowserPage} from './../folder-browser/folder-browser'
 import { ExpandableComponent } from '../../components/expandable/expandable'
+import { Storage } from "@ionic/storage";
 import * as moment from 'moment'
 /*
 class TodoTxt {
@@ -67,7 +68,7 @@ export class GtdBrowserPage {
 
   filterCriteria: any = null;
   groupBySet: Array<any> = [];
-
+  
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -77,13 +78,14 @@ export class GtdBrowserPage {
     private menuCtrl: MenuController,    
     private modalCtrl: ModalController,
     private settings: SettingsProvider,
+    private storage: Storage,
     private markjax: MarkjaxProvider) {
       this.events.subscribe("filter-changed", r => this.onFilterChanged(r));
       this.events.subscribe("groupby-changed", r => this.onGroupByChange(r));
       this.events.subscribe("folder-selected", (r) => {
         this.path = this.extFiles.base
         this.loadFilesAndDirs()
-      })
+      })      
   }
 
   ionViewDidLoad() {
@@ -96,6 +98,12 @@ export class GtdBrowserPage {
         this.extFiles.jumpToDir(this.extFiles._base + '/Meaning/templates')
         this.events.publish('templates-opened')
       }
+      this.storage.get("home").then(res => {
+        if (res) {
+          this._setHome(res)
+        }        
+      });    
+
       this.extFiles.jumpToDir(this.extFiles._base)
       this.loadFilesAndDirs()
     }
@@ -119,10 +127,10 @@ export class GtdBrowserPage {
   }
 
   async loadFilesAndDirs(){
-    this.folders.splice(0, this.folders.length)
+    //this.folders.splice(0, this.folders.length)
     this.files.splice(0, this.files.length)
     this.items.splice(0, this.files.length)
-    this.folders = this.folders.concat(await this.extFiles.listDirs())
+    //this.folders = this.folders.concat(await this.extFiles.listDirs())
     let f = await this.extFiles.listFiles([])
     if(f)
       this.files = this.files.concat(f)
@@ -463,6 +471,15 @@ export class GtdBrowserPage {
     */
   }
 
+  _setHome(home) {
+    this.extFiles._base = home
+    this.settings.setHome(home)
+    this.extFiles.base = this.extFiles._base
+    this.path = this.extFiles.base
+    this.loadList()
+    this.loadFilesAndDirs()
+  }
+
   doHomeSetting() {
     let prompt = this.alertCtrl.create({
       inputs: [
@@ -482,11 +499,8 @@ export class GtdBrowserPage {
           text: 'Save',
           handler: data => {
             console.log('home path saved : ' + data.homepath)
-            this.extFiles._base = data.homepath
-            this.settings.setHome(data.homepath)
-            this.extFiles.base = this.extFiles._base
-            this.path = this.extFiles.base
-            this.loadFilesAndDirs()
+            this.storage.set("home", data.homepath);           
+            this._setHome(data.homepath)
           }
         }
       ]
@@ -567,4 +581,32 @@ export class GtdBrowserPage {
           return 'dark'
      }
    }
+
+   doSelectFolder() {
+    console.log('doSelectFolder : ')    
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Target list');
+    
+    let folders = this.extFiles.listDirs();
+    folders.forEach(element => {
+      alert.addInput({
+        type: 'radio',
+        label: element,
+        value: element,
+        checked: false
+      });
+    });
+
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {        
+        console.log("folder change : " + data)
+        this.extFiles.base = this.extFiles._base + '/' + data
+        this.events.publish('folder-selected',{})
+
+      }
+    })
+    alert.present();
+  }
 }
